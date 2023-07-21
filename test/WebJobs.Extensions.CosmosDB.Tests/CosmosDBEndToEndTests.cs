@@ -62,7 +62,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.CosmosDB.Tests
                     var logMessages = _loggerProvider.GetAllLogMessages();
                     return logMessages.Count(p => p.FormattedMessage != null && p.FormattedMessage.Contains("Trigger called!")) == 4
                         && logMessages.Count(p => p.FormattedMessage != null && p.FormattedMessage.Contains("Trigger with string called!")) == 4
-                        && logMessages.Count(p => p.FormattedMessage != null && p.FormattedMessage.Contains("Trigger with retry called!")) == 8
+                        && logMessages.Count(p => p.FormattedMessage != null && p.FormattedMessage.Contains("Trigger with retry called!")) == 7
                         && logMessages.Count(p => p.Exception != null && p.Exception.InnerException.Message.Contains("Test exception") && !p.Category.StartsWith("Host.Results")) > 0;
                 });
 
@@ -149,7 +149,7 @@ namespace Microsoft.Azure.WebJobs.Extensions.CosmosDB.Tests
             [NoAutomaticTrigger]
             public static void Inputs(
                 [QueueTrigger("NotUsed")] QueueItem item,
-                [CosmosDB(DatabaseName, CollectionName, Id = "{DocumentId}")] JObject document,
+                [CosmosDB(DatabaseName, CollectionName, Id = "{DocumentId}", PartitionKey = "{DocumentId}")] JObject document,
                 [CosmosDB(DatabaseName, CollectionName, SqlQuery = "SELECT * FROM c where c.input = {Input}")] IEnumerable<Item> documents,
                 ILogger log)
             {
